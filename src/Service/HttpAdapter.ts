@@ -1,7 +1,7 @@
-import { StatusCodes as HttpStatusCode } from 'http-status-codes';
 import { Express, RequestHandler } from 'express';
 import { ContextLogger } from '../util';
 import { OutgoingHttpHeaders } from 'http';
+import { HttpStatusCode } from '../Middleware/http/status-codes';
 
 export type ID = string | number;
 export interface QueryParams {

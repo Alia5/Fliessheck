@@ -1,4 +1,4 @@
-import { StatusCodes as HttpStatusCode } from 'http-status-codes';
+import { HttpStatusCode } from '../Middleware/http/status-codes';
 import { toSpaced } from '../util/utils';
 
 export class HttpError extends Error {
