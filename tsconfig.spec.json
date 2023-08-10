@@ -1,0 +1,28 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "module": "CommonJS",
+        "target": "ES2022",
+        "moduleResolution": "Node",
+        "types": [
+            "jest",
+        ],
+        "baseUrl": "./",
+        "experimentalDecorators": true,
+        "noImplicitOverride": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "paths": {
+            "@/*": [
+                "src/*"
+            ]
+        },
+    },
+    "include": [
+        "test/**/*",
+        "src/**/*",
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}
