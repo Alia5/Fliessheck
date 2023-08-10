@@ -180,7 +180,7 @@ export const initServices = (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     services: ServiceConfig<Controller<any, any>>[],
     expressApp: Express,
-    io: SocketIO,
+    io?: SocketIO,
     dbDataSource?: unknown
 ) => {
     Logger.Debug('ServiceInit', `Initializing ${services.length} services`);
@@ -196,6 +196,10 @@ export const initServices = (
         const databaseAdapter = serviceConf.databaseAdapter ? new serviceConf.databaseAdapter(dbDataSource) : undefined;
         const controller = new serviceConf.controller(eventAdapter, databaseAdapter);
         if (eventAdapter) {
+            if (!io) {
+                Logger.Fatal("ServiceInit", "Cannot use EventAdapters without SocketIO");
+                return
+            }
             serviceConf.eventAdapter?.middlewares?.forEach((middleware) => {
                 io.use(middleware);
             });
@@ -210,7 +214,9 @@ export const initServices = (
             initHttpAdapter(serviceConf.httpAdapter, controller as Controller, expressApp);
         }
     });
-    initSocketIO(eventAdapters, io);
+    if (io) {
+        initSocketIO(eventAdapters, io);
+    }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     expressApp.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
         if (err instanceof HttpError) {
