@@ -3,16 +3,70 @@
  Fliessheck</h1>
 </div>
 
-Opinionated node.js backend framework.
+Opinionated node.js backend framework.  
+Built on top of [Express](https://expressjs.com/) and [Socket.io](https://socket.io/)
 
 ## Usage
 
-I wouldn't recommend using this in its current form. So no docs yet
-If you really want to, feel free ¯\\\_(ツ)\_/¯
+main.ts:
 
-## Dev
+```typescript
+import express from "express";
+import cors from "cors";
+import { Logger, initServices } from "fliessheck";
+import * as http from 'http';
+import { HelloService } from "./HelloService";
 
-### Build
+const main = async () => {
+    const port = 3000 as const;
+    const expressApp = express();
+    const httpServer = http.createServer(expressApp);
+    expressApp.use(cors({
+        origin: '*'
+    }));
+    expressApp.use(express.urlencoded({ extended: false }));
+    expressApp.use(express.json());
+
+    initServices([HelloService], expressApp, undefined)
+
+    httpServer.listen(port, () => {
+        Logger.Info('HTTPserver', `Server listening on port ${port}`);
+    });
+    return httpServer;
+};
+
+main().catch((e) => {
+    Logger.Fatal('Main', 'Failed to start server', e);
+});
+```
+
+HelloService.ts:
+
+```typescript
+
+class HelloHttpAdapter extends HttpAdapter<HelloController, string> {
+    public override async find(query: QueryParams, headers: HeaderAccessor): Promise<string> {
+        return this.controller.hello();
+    }
+}
+
+class HelloController extends Controller {
+    public hello(): string {
+        return 'Hello World!';
+    }
+}
+
+
+export const HelloService: ServiceConfig<HelloController> = {
+    controller: HelloController,
+    httpAdapter: {
+        path: 'hello',
+        adapter: HelloHttpAdapter
+    }
+};
+```
+
+### Development / Build
 
 ```bash
 pnpm run build
