@@ -38,7 +38,7 @@ module.exports = {
             }
         },
         {
-            files: ['jest.config.js', '.eslintrc.js'],
+            files: ['jest.config.js', '.eslintrc.js', 'rollup.config.js'],
             parserOptions: {
                 project: 'tsconfig.config.json',
                 impliedStrict: true,

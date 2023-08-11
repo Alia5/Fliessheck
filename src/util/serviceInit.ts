@@ -1,4 +1,4 @@
-import { Express, NextFunction, Request, RequestHandler, Response } from 'express';
+import { Express, Request, RequestHandler, Response } from 'express';
 import { Server as SocketIO, Socket } from 'socket.io';
 import { EventEmitter } from 'events';
 import { Logger } from './logger';
@@ -197,8 +197,8 @@ export const initServices = (
         const controller = new serviceConf.controller(eventAdapter, databaseAdapter);
         if (eventAdapter) {
             if (!io) {
-                Logger.Fatal("ServiceInit", "Cannot use EventAdapters without SocketIO");
-                return
+                Logger.Fatal('ServiceInit', 'Cannot use EventAdapters without SocketIO');
+                return;
             }
             serviceConf.eventAdapter?.middlewares?.forEach((middleware) => {
                 io.use(middleware);
@@ -217,8 +217,7 @@ export const initServices = (
     if (io) {
         initSocketIO(eventAdapters, io);
     }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    expressApp.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
+    expressApp.use((err: Error, req: Request, res: Response) => {
         if (err instanceof HttpError) {
             res.status(err.code).send(err);
         } else {
