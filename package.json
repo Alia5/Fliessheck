@@ -25,7 +25,7 @@
         "lint:fix": "eslint src/ --fix",
         "test": "jest",
         "clean": "rimraf dist dist.cjs",
-        "build:types": "tsc -p tsconfig.json --outDir dist.cjs --emitDeclarationOnly && tsc -p tsconfig.json --emitDeclarationOnly",
+        "build:types": "concurrently 'tsc -p tsconfig.json --outDir dist.cjs --emitDeclarationOnly' 'tsc -p tsconfig.json --emitDeclarationOnly'",
         "build": "rollup -c && pnpm run build:types",
         "dev": "rollup -c --watch --watch.onEnd=\"pnpm run build:types\""
     },
