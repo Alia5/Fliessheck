@@ -217,7 +217,9 @@ export const initServices = (
     if (io) {
         initSocketIO(eventAdapters, io);
     }
-    expressApp.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+    // error handler always needs 4 params
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    expressApp.use((err: Error, req: Request, res: Response, next: NextFunction): void => {
         if (err instanceof HttpError) {
             res.status(err.code).send(err);
         } else {
