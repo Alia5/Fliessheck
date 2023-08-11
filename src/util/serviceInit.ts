@@ -1,4 +1,4 @@
-import { Express, Request, RequestHandler, Response } from 'express';
+import { Express, NextFunction, Request, RequestHandler, Response } from 'express';
 import { Server as SocketIO, Socket } from 'socket.io';
 import { EventEmitter } from 'events';
 import { Logger } from './logger';
@@ -217,7 +217,7 @@ export const initServices = (
     if (io) {
         initSocketIO(eventAdapters, io);
     }
-    expressApp.use((err: Error, req: Request, res: Response) => {
+    expressApp.use((err: Error, req: Request, res: Response, next: NextFunction) => {
         if (err instanceof HttpError) {
             res.status(err.code).send(err);
         } else {
