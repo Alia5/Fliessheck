@@ -1,4 +1,4 @@
-import { Express, RequestHandler } from 'express';
+import { Errback, Express, RequestHandler, Response } from 'express';
 import { ContextLogger } from '../util';
 import { OutgoingHttpHeaders } from 'http';
 import { HttpStatusCode } from '../Middleware/http/status-codes';
@@ -24,12 +24,20 @@ export interface HeaderAccessor {
     set: (headers: OutgoingHttpHeaders) => void;
 }
 
+export type SendFileOptions = Parameters<Response['sendFile']>[1];
+
 export interface IHttpAdapter<DataType = undefined> {
-    find?(params: RequestParams, header: HeaderAccessor): IHttpAdapterReturn<DataType>;
-    get?(id: ID, params: RequestParams, header: HeaderAccessor): IHttpAdapterReturn<DataType>;
-    create?(params: RequestParams, data: DataType | DataType[] | undefined, header: HeaderAccessor): IHttpAdapterReturn<DataType>;
-    update?(id: ID, params: RequestParams, data: DataType | DataType[] | undefined, header: HeaderAccessor): IHttpAdapterReturn<DataType>;
-    delete?(id: ID, params: RequestParams, header: HeaderAccessor): IHttpAdapterReturn<DataType>;
+    find?(params: RequestParams, header: HeaderAccessor): IHttpAdapterReturn<DataType|((res: Response) => MaybePromiseLike<void>)>;
+    get?(id: ID, params: RequestParams, header: HeaderAccessor): IHttpAdapterReturn<DataType|((res: Response) => MaybePromiseLike<void>)>;
+    create?(
+        params: RequestParams, data: DataType | DataType[] | undefined, header: HeaderAccessor
+    ): IHttpAdapterReturn<DataType|((res: Response) => MaybePromiseLike<void>)>;
+    update?(
+        id: ID, params: RequestParams, data: DataType | DataType[] | undefined, header: HeaderAccessor
+    ): IHttpAdapterReturn<DataType|((res: Response) => MaybePromiseLike<void>)>;
+    delete?(
+        id: ID, params: RequestParams, header: HeaderAccessor
+    ): IHttpAdapterReturn<DataType|((res: Response) => MaybePromiseLike<void>)>;
 }
 
 export abstract class HttpAdapter<Controller, DataType> implements IHttpAdapter<DataType> {
@@ -37,26 +45,37 @@ export abstract class HttpAdapter<Controller, DataType> implements IHttpAdapter<
         [K in keyof Required<IHttpAdapter>]?: RequestHandler[];
     } = {};
     protected logger: ContextLogger;
+
+    protected sendFile = (file: string, options?: SendFileOptions, fn?: Errback) =>
+        (res: Response) => {
+            res.sendFile(file, options||{}, fn);
+        };
+
     public constructor(protected controller: Controller) {
         this.logger = new ContextLogger(this.constructor.name);
     }
 
-    public find?(params: RequestParams, header: HeaderAccessor): IHttpAdapterReturn<DataType>;
-    public get?(id: ID, params: RequestParams, header: HeaderAccessor): IHttpAdapterReturn<DataType>;
+    public find?(
+        params: RequestParams, header: HeaderAccessor
+    ): IHttpAdapterReturn<DataType|((res: Response) => MaybePromiseLike<void>)>;
+    public get?(
+        id: ID, params: RequestParams, header: HeaderAccessor
+    ): IHttpAdapterReturn<DataType|((res: Response) => MaybePromiseLike<void>)>;
     public create?(
         params: RequestParams,
         data: DataType | DataType[] | undefined,
         header: HeaderAccessor
-    ): IHttpAdapterReturn<DataType>;
+    ): IHttpAdapterReturn<DataType|((res: Response) => MaybePromiseLike<void>)>;
     public update?(
         id: ID,
         params: RequestParams,
         data: DataType | DataType[] | undefined,
         header: HeaderAccessor
-    ): IHttpAdapterReturn<DataType>;
-    public delete?(id: ID, params: RequestParams, header: HeaderAccessor): IHttpAdapterReturn<DataType>;
+    ): IHttpAdapterReturn<DataType|((res: Response) => MaybePromiseLike<void>)>;
+    public delete?(
+        id: ID, params: RequestParams, header: HeaderAccessor
+    ): IHttpAdapterReturn<DataType|((res: Response) => MaybePromiseLike<void>)>;
 }
-
 
 export const ADAPTER_METHOD_CONFIG: { readonly [K in keyof Required<IHttpAdapter>]: {
     readonly METHOD: keyof Pick<Express, 'get' | 'post' | 'put' | 'delete'>;

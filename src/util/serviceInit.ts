@@ -10,6 +10,7 @@ import { EventAdapter, RegisteredEventNames } from '../Service/EventAdapter';
 import { IHttpAdapter, ADAPTER_METHOD_CONFIG } from '../Service/HttpAdapter';
 import { ServiceConfig } from '../Service/ServiceConfig';
 import { OutgoingHttpHeaders } from 'http';
+import { ServiceRegistry } from './serviceRegistry';
 
 const socketOnConnectCallbacks: ((socket: Socket) => void|Promise<void>)[] = [];
 const socketOnDisconnectCallbacks: ((socket: Socket) => void|Promise<void>)[] = [];
@@ -80,7 +81,12 @@ const initHttpAdapter = (
                     if ((adapterFunc as unknown as Record<string, unknown>).then) {
                         adapterFunc(...args)
                             .then((adapterRes) => {
-                                res.status(expressOpts.STATUS).send(adapterRes);
+                                if (typeof adapterRes === 'function') {
+                                    res.status(expressOpts.STATUS);
+                                    adapterRes(res);
+                                } else {
+                                    res.status(expressOpts.STATUS).send(adapterRes);
+                                }
                             })
                             .catch((adapterErr: Error|HttpError) => {
                                 next(adapterErr);
@@ -89,10 +95,15 @@ const initHttpAdapter = (
                         void (async () => {
                             try {
                                 const adapterRes = adapterFunc(...args);
-                                if ((adapterRes as unknown as Record<string, unknown>).then) {
-                                    res.status(expressOpts.STATUS).send(await adapterRes);
+                                const awaitedRes = (adapterRes as unknown as Record<string, unknown>).then
+                                    ? await adapterRes
+                                    : adapterRes;
+
+                                if (typeof awaitedRes === 'function') {
+                                    res.status(expressOpts.STATUS);
+                                    awaitedRes(res);
                                 } else {
-                                    res.status(expressOpts.STATUS).send(adapterRes);
+                                    res.status(expressOpts.STATUS).send(awaitedRes);
                                 }
                             } catch (e) {
                                 Logger.Error(httpAdapter.constructor.name,
@@ -194,6 +205,11 @@ export const initServices = (
         const eventAdapter = serviceConf.eventAdapter ? new serviceConf.eventAdapter.adapter() : undefined;
         const databaseAdapter = serviceConf.databaseAdapter ? new serviceConf.databaseAdapter(dbDataSource) : undefined;
         const controller = new serviceConf.controller(eventAdapter, databaseAdapter);
+
+        Object.assign(Reflect.get(ServiceRegistry, 'Services'), {
+            [serviceConf.controller.constructor.name]: controller
+        });
+
         if (eventAdapter) {
             if (!io) {
                 Logger.Fatal('ServiceInit', 'Cannot use EventAdapters without SocketIO');

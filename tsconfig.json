@@ -3,7 +3,7 @@
         "target": "ES2022",
         "module": "ESNext",
         "moduleResolution": "Node",
-        "noImplicitAny": true,
+        "noImplicitAny": false,
         "rootDir": "./src",
         "sourceMap": true,
         "allowSyntheticDefaultImports": false,
