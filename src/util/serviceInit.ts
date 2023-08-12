@@ -61,9 +61,8 @@ const initHttpAdapter = (
                 path,
                 (req, res, next) => {
                     const args: unknown[] = [
-                        // TODO: create mapping if ExtraPath gets made configurable
                         expressOpts.EXTRA_PATH ? req.params.id : undefined,
-                        req.query,
+                        { query: req.query, url: req.params },
                         expressOpts.METHOD === 'post' || expressOpts.METHOD === 'put' ? req.body : undefined,
                         {
                             get: (key?: string) => key ? req.headers[key.toLowerCase()] : req.headers,
