@@ -26,15 +26,27 @@ log4js.configure({
         console: {
             type: 'console',
             layout: getLogLayout(true)
-        },
-        file: {
-            type: 'file',
-            filename: './logs/TODO.log',  // TODO
-            layout: getLogLayout(false)
         }
     },
-    categories: { default: { appenders: ['console', 'file'], level: log4js.levels.ALL.levelStr } }
+    categories: { default: { appenders: ['console'], level: log4js.levels.ALL.levelStr } }
 });
+
+export const enableFileLog = (path: string) => {
+    log4js.configure({
+        appenders: {
+            console: {
+                type: 'console',
+                layout: getLogLayout(true)
+            },
+            file: {
+                type: 'file',
+                filename: path,
+                layout: getLogLayout(false)
+            }
+        },
+        categories: { default: { appenders: ['console', 'file'], level: log4js.levels.ALL.levelStr } }
+    });
+};
 
 const logger = log4js.getLogger();
 logger.level = log4js.levels.ALL;
