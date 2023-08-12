@@ -1,11 +1,10 @@
 {
     "compilerOptions": {
         "target": "ES2022",
-        "module": "CommonJS",
+        "module": "ESNext",
         "moduleResolution": "Node",
         "noImplicitAny": true,
         "rootDir": "./src",
-        "outDir": "./dist",
         "sourceMap": true,
         "allowSyntheticDefaultImports": false,
         "strict": true,
@@ -25,9 +24,7 @@
         "experimentalDecorators": true,
         "exactOptionalPropertyTypes": true,
         "noImplicitOverride": true,
-        "declaration": true,
         "baseUrl": "./",
-        "emitDeclarationOnly": true
     },
     "include": [
         "src/**/*"

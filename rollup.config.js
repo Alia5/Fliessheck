@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-import esbuild from 'rollup-plugin-esbuild';
+import typescript from '@rollup/plugin-typescript';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
@@ -8,7 +8,7 @@ export default [
     {
         input: 'src/index.ts',
         plugins: [
-            esbuild(),
+            typescript(),
             commonjs(),
             json(),
             resolve({
@@ -28,7 +28,7 @@ export default [
     {
         input: 'src/index.ts',
         plugins: [
-            esbuild(),
+            typescript(),
             commonjs(),
             json(),
             resolve({
