@@ -69,9 +69,9 @@ export const HelloService: ServiceConfig<HelloController> = {
 ### Development / Build
 
 ```bash
-pnpm run build
+bun run build
 #or for a live build with hotreload
-pnpm run dev
+bun run dev
 ```
 
 ## License

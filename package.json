@@ -27,8 +27,8 @@
         "test": "jest",
         "clean": "rimraf dist dist.cjs",
         "build:types": "concurrently 'tsc -p tsconfig.json --outDir dist.cjs --emitDeclarationOnly --declaration' 'tsc -p tsconfig.json --outDir dist --emitDeclarationOnly --declaration'",
-        "build": "rollup -c && pnpm run build:types",
-        "dev": "rollup -c --watch --watch.onEnd=\"pnpm run build:types\""
+        "build": "rollup -c && bun run build:types",
+        "dev": "rollup -c --watch --watch.onEnd=\"bun run build:types\""
     },
     "devDependencies": {
         "@rollup/plugin-commonjs": "^25.0.3",
