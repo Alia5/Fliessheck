@@ -1,10 +1,12 @@
-<div style="display: grid; grid-template-columns: auto auto; place-items: center; width: 100%">
-<h1 align="center"><img align="center" src="fliessheck.png?raw=true" width="256" height="256" alt="GlosSI Logo" />
- Fliessheck</h1>
-</div>
+<img align="right" src="fliessheck.png?raw=true" width="128" height="128" alt="Logo" />
+
+# Fliessheck
 
 Opinionated node.js backend framework.  
 Built on top of [Express](https://expressjs.com/) and [Socket.io](https://socket.io/)
+
+This project aims to provide me a framework for an application that can automagically bring up light but extremely versatile http-services just by dropping a small JS/TS class into a folder.  
+Thus documentation is sparse and I wouldn't recommend using it when starting your project.
 
 ## Usage
 
