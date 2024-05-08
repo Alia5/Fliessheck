@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
+
 import { initServices } from '../../src/util/serviceInit';
 import { Logger } from '../../src/util/logger';
 import { default as cors } from 'cors';
@@ -14,7 +14,7 @@ type DefaultEventsMap = {};
 
 const init = () => {
 
-    const port = 3300 as const;
+    const port = 3300;
     const expressApp = express();
 
     const httpServer = http.createServer(expressApp);

@@ -4,6 +4,7 @@ import { E2ETestController } from './E2ETestController';
 import { Middleware } from '../../../src/Middleware/http/decorators/Middleware';
 import { JwtAuth } from '../../../src/Middleware/http/decorators/Auth';
 
+/* eslint-disable */
 export class E2ETestHttpAdapter extends HttpAdapter<E2ETestController, unknown> {
     public override find(query: QueryParams) {
         return this.controller.get(query);

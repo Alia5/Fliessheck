@@ -8,7 +8,7 @@ abstract new (...args: ConstructorParameters<T>) => InstanceType<T>;
 export type ClassName<T> = new (...args: any[]) => T;
 
 export interface Dict {
-    // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
+
     [key: string]: Dict|string|number|boolean|undefined|unknown|ArrayLike<Dict|string|number|boolean|undefined|unknown>;
 }
 

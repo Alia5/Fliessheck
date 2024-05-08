@@ -11,7 +11,7 @@ import {
 
 const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 const randomSecret = (
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
     () => [...new Array(16)]
         .reduce(
             (acc: string) => acc += alphabet.charAt(Math.floor(Math.random() * alphabet.length)),

@@ -46,13 +46,14 @@ const initHttpAdapter = (
             !httpAdapter[adapterMethod as keyof typeof ADAPTER_METHOD_CONFIG]
         );
     httpAdapterConf.middlewares?.forEach((middleware) => {
+        // eslint-disable-next-line no-constant-binary-expression
         expressApp.use(trimDoubles(`/${httpAdapterConf.path}/*` || '', '/'), middleware);
     });
     availableMethods.forEach(
         ([adapterMethod, expressOpts]) =>
         {
             const path = trimDoubles(`/${httpAdapterConf.path}/${expressOpts.EXTRA_PATH || ''}`, '/');
-            // eslint-disable-next-line
+
             Reflect.get(httpAdapterConf.adapter, 'middlewares')?.[adapterMethod]
                 ?.forEach((middleware: RequestHandler) => {
                     expressApp[expressOpts.METHOD](path, middleware);
@@ -76,7 +77,7 @@ const initHttpAdapter = (
                     ].filter((arg) => arg !== undefined);
 
                     // allow non-null-assertion; check is made by filter above.
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
                     const adapterFunc = httpAdapter[adapterMethod as keyof typeof ADAPTER_METHOD_CONFIG]!.bind(httpAdapter);
                     if ((adapterFunc as unknown as Record<string, unknown>).then) {
                         adapterFunc(...args)
@@ -107,7 +108,7 @@ const initHttpAdapter = (
                                 }
                             } catch (e) {
                                 Logger.Error(httpAdapter.constructor.name,
-                                    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+
                                     (e as Error)?.stack ? (e as Error).stack : e);
                                 next(e);
                             }
@@ -140,6 +141,7 @@ const initSocketIO = (adapters: EventAdapter<unknown, {}>[], io: SocketIO): void
         eventName: typeof allReceivingEvents[number]
     ) =>
         (...args: unknown[]) => {
+            // eslint-disable-next-line @typescript-eslint/no-floating-promises
             adapters.filter((adapter) =>
             // eslint-disable-next-line
                 !!(adapter as any)[`on${capitalize(eventName as string)}`]
@@ -238,7 +240,7 @@ export const initServices = (
         if (err instanceof HttpError) {
             res.status(err.code).send(err);
         } else {
-            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+
             const error = new InternalServerError(err ? `${err}` : undefined);
             res.status(error.code).send(error);
         }

@@ -15,7 +15,7 @@ export interface Rooms {
     [K: symbol]: typeof K;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
+
 export type RegisteredRooms = Exclude<Rooms[keyof Rooms], symbol>|string;
 
 export type SocketId = string;
@@ -29,18 +29,18 @@ export type RegisteredEventNames = keyof RegisteredEvents;
 
 // eslint-disable-next-line @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any
 export type EventReceiver<T extends {[K in string]: [...any]}= {}> = Partial<MergeUnion<{
-    // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
+
     [K in keyof RegisteredEvents|keyof T]: {
         [IK in `on${Capitalize<K extends string ? K : never>}`]: (
             socket: MaybeSocketId,
             ...args: [...( K extends keyof RegisteredEvents ? RegisteredEvents[K] : T[K])]
         ) => void
     }
-// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
+
 }[keyof RegisteredEvents | keyof T]>>;
 
 // my eslint-rules don't play nice with decorators, ouh well...
-// eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-redundant-type-constituents
+
 export const Receive = <T extends RegisteredEventNames|string>(
     value: T
 ) => (
@@ -62,9 +62,10 @@ export abstract class EventAdapter<
 
     // stupid typescript workaround to correctly infer TypeParam
     // mark private so that no access can occur.
+    // eslint-disable-next-line no-unused-private-class-members
     #emittable!: Emittable;
 
-    // eslint-disable-next-line @typescript-eslint/naming-convention
+
     protected readonly controller!: Controller;
     private socketIo!: SocketIO|undefined;
     private localEmitter!: EventEmitter|undefined;

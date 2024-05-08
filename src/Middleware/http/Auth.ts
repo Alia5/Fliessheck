@@ -14,7 +14,7 @@ export const jwtAuth = (options?: VerifyOptions): RequestHandler =>
                 verifyJwt(token, options);
                 next();
             } catch (e) {
-                // eslint-disable-next-line
+
                 const err = new UnauthorizedError(e ? `${e}` : undefined);
                 res.status(err.code).send(err);
             }

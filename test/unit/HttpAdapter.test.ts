@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-/* eslint-disable @typescript-eslint/naming-convention */
+
 import { QueryParams, HttpAdapter, IHttpAdapterReturn } from '../../src/Service/HttpAdapter';
 import { ContextLogger } from '../../src/util/logger';
 import { MockController } from '../mocks/MockController';

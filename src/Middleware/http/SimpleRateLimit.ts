@@ -33,6 +33,9 @@ export const simpleRateLimit = (
     const ipMap: IpMap = {};
     return (req, res, next) => {
         const ip = req.ip;
+        if (!ip) {
+            return;
+        }
         if (ipMap[ip] === undefined) {
             ipMap[ip] = {
                 count: 0,
@@ -48,7 +51,7 @@ export const simpleRateLimit = (
             };
             if (config.condition) {
                 void (async () => {
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
                     const message = await config.condition!(req, ipMap[ip].count, ipMap[ip].lastRequest);
                     if (message !== undefined) {
                         const err = new TooManyRequestsError(message);

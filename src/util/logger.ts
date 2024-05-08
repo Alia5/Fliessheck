@@ -4,7 +4,7 @@ const getLogLayout = (color: boolean): log4js.Layout => ({
     type: 'pattern',
     pattern: `${color ? '%[' : ''}[%d] [%p] %x{additional} ${color ? '%]' : ''}- %m`,
     tokens: {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
         additional: (logEvent: log4js.LoggingEvent & { additional?: string }) => {
             if (logEvent.additional) {
                 return logEvent.additional;
